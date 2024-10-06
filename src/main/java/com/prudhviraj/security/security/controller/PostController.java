@@ -1,6 +1,7 @@
 package com.prudhviraj.security.security.controller;
 
 
+import com.prudhviraj.security.security.advices.ApiResponse;
 import com.prudhviraj.security.security.dto.PostDto;
 import com.prudhviraj.security.security.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,10 @@ public class PostController {
     }
 
     @GetMapping("/test")
-    public String test(){
-        return "hello Prudhviraj from security";
+    public ApiResponse<String> test() {
+        return new ApiResponse<>("hello Prudhviraj from security");
     }
+
 
 
 }
