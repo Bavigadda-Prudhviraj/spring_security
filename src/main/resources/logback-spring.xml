@@ -1,0 +1,38 @@
+<configuration>
+    <!-- Define log pattern and log path -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level %c{1} - %msg%n"/>
+    <property name="LOG_PATH" value="logs"/>
+
+    <!-- RollingFileAppender logs to a file with a Size and Time Based Rolling Policy -->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Size and Time Based Rolling Policy -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Log file name pattern with date (%d) and index (%i) -->
+            <fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- Maximum size of each log file before rolling (10MB) -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- Keep log files for a maximum of 30 days -->
+            <maxHistory>30</maxHistory>
+            <!-- Limit the total size of all logs to 3GB -->
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
+        <!-- Encoder for log output format -->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ConsoleAppender to help debugging issues -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger at debug level -->
+    <root level="debug">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ROLLING_FILE"/>
+    </root>
+</configuration>
