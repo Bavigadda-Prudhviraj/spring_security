@@ -3,11 +3,14 @@ package com.prudhviraj.security.security.service.impl;
 
 import com.prudhviraj.security.security.dto.PostDto;
 import com.prudhviraj.security.security.entities.Post;
+import com.prudhviraj.security.security.entities.User;
 import com.prudhviraj.security.security.exceptions.ResourceNotFoundException;
 import com.prudhviraj.security.security.repository.PostRepository;
 import com.prudhviraj.security.security.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +31,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDto> getAllPost() {
         log.info("Fetching all the Posts");
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        log.info("logged user details are : {}", user);
         return postRepository
                 .findAll()
                 .stream()

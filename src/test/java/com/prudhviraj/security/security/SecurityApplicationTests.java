@@ -18,7 +18,7 @@ class SecurityApplicationTests {
 
 	@Test
 	void contextLoads() {
-		User user = new User(1l,"prudhviraj","passowrd");
+		User user = new User(1l,"prudhviraj","prudhviraj729@gmail.com","password");
 		log.info("contextLoads method is here");
 		String token = jwtService.generateToken(user);
 		log.info("Jwt Token : {}", token);
