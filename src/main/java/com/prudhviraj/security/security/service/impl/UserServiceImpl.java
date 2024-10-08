@@ -8,6 +8,7 @@ import com.prudhviraj.security.security.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +29,7 @@ public class UserServiceImpl implements UserService , UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("No user account associated with the provided email address: "+username+". Please check your email and try again."));
+        return userRepository.findByEmail(username).orElseThrow(()->new BadCredentialsException("No user account associated with the provided email address: "+username+". Please check your email and try again."));
     }
     @Override
     public UserDto getUserByUserId(Long userId) {
