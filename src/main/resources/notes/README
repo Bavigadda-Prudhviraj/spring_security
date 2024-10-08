@@ -1,0 +1,61 @@
+Here's a structured and polished guide for setting up and running SonarQube with Maven, including the necessary properties and commands:
+
+Setting Up SonarQube with Maven
+
+Prerequisites
+- Ensure you have Java 17 installed.
+- Maven must be installed and configured in your environment.
+- Download and extract SonarQube (version 10.6.0.92116).
+
+Steps to Run SonarQube
+
+1. **Start SonarQube from Command Line:**
+    - Navigate to the SonarQube directory: cd path\to\sonarqube-10.6.0.92116\bin\windows-x86-64
+    - Double-click the `StartSonar.bat` file or run it from the command line to start SonarQube.
+
+2. **Access SonarQube Web Interface:**
+    - Open your browser and navigate to: http://localhost:9000/
+    - Log in using the default credentials:
+        - Username: `admin`
+        - Password: `admin`
+    - **(Change the default password upon first login for security.)**
+
+Configure Your Maven Project
+3. **Add Properties and Plugin to `pom.xml`:**
+
+   <properties>
+       <java.version>17</java.version>
+       <maven.compiler.source>17</maven.compiler.source>
+       <maven.compiler.target>17</maven.compiler.target>
+       <sonar.projectKey>your_project_key_here</sonar.projectKey> <!-- Replace with your project key -->
+       <sonar.projectName>Your Project Name Here</sonar.projectName> <!-- Replace with your project name -->
+       <sonar.projectVersion>1.0</sonar.projectVersion>
+       <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+       <sonar.login>your_generated_token_here</sonar.login> <!-- Replace with your SonarQube token -->
+   </properties>
+
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>org.sonarsource.scanner.maven</groupId>
+               <artifactId>sonar-maven-plugin</artifactId>
+               <version>4.0.0.4121</version> <!-- or the latest version -->
+           </plugin>
+       </plugins>
+   </build>
+
+
+Run SonarQube Analysis
+4. **Execute Maven Command:**
+    - In your project directory, run the following command to clean, skip tests, and trigger SonarQube analysis:
+      mvn clean -DskipTests verify sonar:sonar
+
+
+5. Verify Project in SonarQube:
+    - Return to the SonarQube web interface and check if your project has been successfully loaded.
+
+Notes:
+- **Replace the placeholders** in the properties section (`your_project_key_here`, `Your Project Name Here`, and `your_generated_token_here`) with your actual project key, project name, and the generated token from SonarQube.
+- Ensure that your network allows connections to the SonarQube server if you are using it in a remote setup.
+
+Feel free to modify any section according to your specific needs!

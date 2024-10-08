@@ -1,0 +1,22 @@
+INSERT INTO post (id, title, description) VALUES
+(1, 'Introduction to Spring Boot', 'Spring Boot simplifies Java development. This post introduces its core features...'),
+(2, 'Understanding Dependency Injection', 'Dependency Injection (DI) is a key concept in Spring. In this post...'),
+(3, 'Getting Started with Hibernate', 'Hibernate ORM is a framework for mapping an object-oriented domain...'),
+(4, 'REST API Best Practices', 'When building REST APIs, it’s important to follow best practices such as...'),
+(5, 'Working with Spring Data JPA', 'Spring Data JPA provides an abstraction over JPA, making it easier...'),
+(6, 'Exception Handling in Spring', 'Exception handling in Spring applications can be done using @ControllerAdvice...'),
+(7, 'Securing APIs with Spring Security', 'In this post, we explore how to secure APIs using Spring Security...'),
+(8, 'JWT Authentication in Spring Boot', 'JWT (JSON Web Token) provides a way to handle authentication...'),
+(9, 'Introduction to Flyway', 'Flyway is a database migration tool that integrates seamlessly with Spring...'),
+(10, 'Spring Boot Logging with Logback', 'Logback is the default logging framework in Spring Boot applications...'),
+(11, 'Spring Boot Testing Strategies', 'Testing is a critical part of application development. This post covers...'),
+(12, 'Understanding AOP in Spring', 'Aspect-Oriented Programming (AOP) allows separation of cross-cutting concerns...'),
+(13, 'Database Transactions with Spring', 'In this post, we’ll explore how to handle database transactions...'),
+(14, 'Caching in Spring Boot', 'Spring provides a comprehensive caching abstraction. This post...'),
+(15, 'Pagination and Sorting in Spring Data JPA', 'Pagination and sorting are essential for handling large datasets...'),
+(16, 'Introduction to Spring Profiles', 'Spring Profiles allow you to define different configurations...'),
+(17, 'Spring Boot Actuator', 'Spring Boot Actuator provides production-ready features for monitoring...'),
+(18, 'File Upload with Spring Boot', 'Handling file uploads in Spring Boot is simple with the use of...'),
+(19, 'Spring Boot with Docker', 'This post covers how to containerize a Spring Boot application using Docker...'),
+(20, 'Introduction to Microservices Architecture', 'Microservices architecture breaks down applications into...');
+

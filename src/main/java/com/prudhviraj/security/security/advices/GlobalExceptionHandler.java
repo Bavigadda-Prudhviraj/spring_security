@@ -2,8 +2,10 @@ package com.prudhviraj.security.security.advices;
 
 
 import com.prudhviraj.security.security.exceptions.ResourceNotFoundException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,6 +50,26 @@ public class GlobalExceptionHandler {
                 .build();
         return buildErrorResponseEntity(apiError);
 
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException authenticationException){
+        ApiError error = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(authenticationException.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(error);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(JwtException jwtException){
+        ApiError error = ApiError.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(jwtException.getLocalizedMessage())
+                .build();
+
+        return buildErrorResponseEntity(error);
     }
 
 
