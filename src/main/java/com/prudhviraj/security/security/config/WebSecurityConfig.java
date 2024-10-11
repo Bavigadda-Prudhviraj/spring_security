@@ -1,6 +1,7 @@
 package com.prudhviraj.security.security.config;
 
 import com.prudhviraj.security.security.filters.JwtAuthFilter;
+import com.prudhviraj.security.security.handlers.OauthSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,15 +24,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
-    public WebSecurityConfig(JwtAuthFilter jwtAuthFilter){
+    private final OauthSuccessHandler oauthSuccessHandler;
+    public WebSecurityConfig(JwtAuthFilter jwtAuthFilter, OauthSuccessHandler oauthSuccessHandler){
+
         this.jwtAuthFilter = jwtAuthFilter;
+        this.oauthSuccessHandler = oauthSuccessHandler;
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/posts/").permitAll()
+                        .requestMatchers("/auth/**","/posts/","/home.html").permitAll()
                         // Only users with 'ADMIN' role can access URLs matching "/posts/**"
                         //.requestMatchers("/posts/**").hasAnyRole("ADMIN")
                         // All other requests must be authenticated (logged in)
@@ -40,7 +44,12 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauthConfig-> oauthConfig
+                        // Configure OAuth2 login with custom failure URL and success handler
+                        .failureUrl("/login?error=true")
+                        .successHandler(oauthSuccessHandler));
+
                 // Enables form-based login (standard login form will be presented for authentication)
         //        .formLogin(Customizer.withDefaults());
 
