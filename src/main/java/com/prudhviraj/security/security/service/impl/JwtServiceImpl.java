@@ -59,7 +59,7 @@ public class JwtServiceImpl  implements JwtService{
                 .subject(user.getId().toString())
                 // Include the user's email and role as claims
                 .claim("email", user.getEmail())
-                .claim("role", Set.of("ADMIN", "USER"))
+                .claim("roles", user.getRoles().toString())
                 // Set the token's issued date to the current time
                 .issuedAt(new Date())
                 // Set the token's expiration time to 10 minutes from the current time

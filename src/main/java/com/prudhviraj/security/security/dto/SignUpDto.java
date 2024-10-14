@@ -1,8 +1,11 @@
 package com.prudhviraj.security.security.dto;
 
+import com.prudhviraj.security.security.entities.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 public class SignUpDto {
@@ -12,4 +15,5 @@ public class SignUpDto {
     @Column(unique = true)
     private String email;
     private String password;
+    private Set<Role> roles;
 }

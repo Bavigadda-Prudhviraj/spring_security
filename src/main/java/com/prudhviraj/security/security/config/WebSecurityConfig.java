@@ -1,9 +1,9 @@
 package com.prudhviraj.security.security.config;
-
 import com.prudhviraj.security.security.filters.JwtAuthFilter;
 import com.prudhviraj.security.security.handlers.OauthSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static com.prudhviraj.security.security.entities.enums.Role.ADMIN;
+import static com.prudhviraj.security.security.entities.enums.Role.CREATOR;
 
 @Configuration
 // Enables Spring Security and allows configuration of security features for the application
@@ -26,19 +28,19 @@ public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final OauthSuccessHandler oauthSuccessHandler;
     public WebSecurityConfig(JwtAuthFilter jwtAuthFilter, OauthSuccessHandler oauthSuccessHandler){
-
         this.jwtAuthFilter = jwtAuthFilter;
         this.oauthSuccessHandler = oauthSuccessHandler;
     }
+
+    private static final String[] publicRoutes = {"/auth/**","/home.html", "/error"};
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/posts/","/home.html").permitAll()
-                        // Only users with 'ADMIN' role can access URLs matching "/posts/**"
-                        //.requestMatchers("/posts/**").hasAnyRole("ADMIN")
-                        // All other requests must be authenticated (logged in)
+                        .requestMatchers(publicRoutes).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/posts/**").hasAnyRole(ADMIN.name(), CREATOR.name())
                         .anyRequest()
                         .authenticated())
                 .csrf(csrfConfig -> csrfConfig.disable())

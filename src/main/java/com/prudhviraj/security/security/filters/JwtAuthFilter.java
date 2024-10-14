@@ -8,8 +8,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +79,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("User with ID: {} successfully authenticated", userId);
 
                 // Create the authentication token and set the authentication in the context
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, null);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 // Set additional details like the IP address and session ID for the authentication token
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 log.info("Authentication token details set: IP = {}, Session ID = {}", request.getRemoteAddr(), request.getRequestedSessionId());
