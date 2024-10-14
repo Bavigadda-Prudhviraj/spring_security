@@ -9,6 +9,7 @@ import com.prudhviraj.security.security.exceptions.ResourceNotFoundException;
 import com.prudhviraj.security.security.repository.UserRepository;
 import com.prudhviraj.security.security.service.AuthService;
 import com.prudhviraj.security.security.service.JwtService;
+import com.prudhviraj.security.security.service.SessionService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,17 +28,19 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private PasswordEncoder passwordEncoder;
+    private  final PasswordEncoder passwordEncoder;
+    private final SessionServiceImpl sessionService;
 
     // Constructor injection
     public AuthServiceImpl(UserRepository userRepository, ModelMapper modelMapper,
                            AuthenticationManager authenticationManager, JwtService jwtService,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder, SessionServiceImpl sessionService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.sessionService = sessionService;
     }
     /**
      * Handles user sign-up by saving user details into the database.
@@ -126,6 +129,9 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Generated access token for user: {}", user.getEmail());
         log.debug("Generated refresh token for user: {}", user.getEmail());
 
+        sessionService.generateNewSession(user, refreshToken);
+
+
         // Return the LoginResponseDto containing the user ID, access token, and refresh token
         return new LoginResponseDto(user.getId(), accessToken, refreshToken);
     }
@@ -152,6 +158,9 @@ public class AuthServiceImpl implements AuthService {
         // Extract user ID from the provided refresh token
         Long userId = jwtService.getUserIdFromToken(refreshToken);
         log.debug("Extracted user ID from refresh token: {}", userId);
+
+        // Call to generate a new session
+        sessionService.validateRefreshToken(refreshToken);
 
         // Fetch the user from the repository using the extracted user ID
         User user = userRepository.findById(userId)
