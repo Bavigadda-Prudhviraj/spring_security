@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static com.prudhviraj.security.security.entities.enums.Permissions.*;
 import static com.prudhviraj.security.security.entities.enums.Role.ADMIN;
 import static com.prudhviraj.security.security.entities.enums.Role.CREATOR;
 
@@ -34,30 +36,57 @@ public class WebSecurityConfig {
 
     private static final String[] publicRoutes = {"/auth/**","/home.html", "/error"};
 
+    /**
+     * Configures the security filter chain for the application.
+     *
+     * This method defines the authorization rules for various HTTP requests,
+     * including role-based and permission-based access control.
+     *
+     * @param httpSecurity The HttpSecurity object used for configuring security
+     * @return A configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
+                        // Allow public access to specified routes
                         .requestMatchers(publicRoutes).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/posts/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/posts/**").hasAnyRole(ADMIN.name(), CREATOR.name())
-                        .anyRequest()
-                        .authenticated())
+                        // Allow public GET requests to posts
+                        .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                        // Restrict POST requests to users with ADMIN or CREATOR roles
+                        .requestMatchers(HttpMethod.POST, "/posts/**")
+                            .hasAnyRole(ADMIN.name(), CREATOR.name())
+                        // Restrict POST requests based on specific POST_CREATE authority
+                        .requestMatchers(HttpMethod.POST, "/posts/**")
+                            .hasAnyAuthority(POST_CREATE.name())
+                        // Restrict GET requests based on specific POST_VIEW authority
+                        .requestMatchers(HttpMethod.GET, "/posts/**")
+                            .hasAnyAuthority(POST_VIEW.name())
+                        // Restrict PUT requests based on specific POST_UPDATE authority
+                        .requestMatchers(HttpMethod.PUT, "/posts/**")
+                            .hasAnyAuthority(POST_UPDATE.name())
+                        // Restrict DELETE requests based on specific POST_DELETE authority
+                        .requestMatchers(HttpMethod.DELETE, "/posts/**")
+                            .hasAnyAuthority(POST_DELETE.name())
+                        // Require authentication for any other requests
+                        .anyRequest().authenticated())
+                // Disable CSRF protection (consider re-enabling for non-API applications)
                 .csrf(csrfConfig -> csrfConfig.disable())
+                // Configure session management to be stateless
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Add custom JWT authentication filter before the default username/password authentication filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauthConfig-> oauthConfig
-                        // Configure OAuth2 login with custom failure URL and success handler
+                // Configure OAuth2 login with a custom failure URL and success handler
+                .oauth2Login(oauthConfig -> oauthConfig
                         .failureUrl("/login?error=true")
                         .successHandler(oauthSuccessHandler));
 
-                // Enables form-based login (standard login form will be presented for authentication)
-        //        .formLogin(Customizer.withDefaults());
-
-        // Returns the configured security filter chain, which is used by Spring Security
-        return  httpSecurity.build();
+        // Returns the configured security filter chain used by Spring Security
+        return httpSecurity.build();
     }
+
 
 //    @Bean
 //    UserDetailsService InMemoryUserDetails() {

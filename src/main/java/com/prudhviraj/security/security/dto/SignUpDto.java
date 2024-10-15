@@ -1,5 +1,6 @@
 package com.prudhviraj.security.security.dto;
 
+import com.prudhviraj.security.security.entities.enums.Permissions;
 import com.prudhviraj.security.security.entities.enums.Role;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
@@ -16,4 +17,5 @@ public class SignUpDto {
     private String email;
     private String password;
     private Set<Role> roles;
+    private Set<Permissions> permission;
 }
