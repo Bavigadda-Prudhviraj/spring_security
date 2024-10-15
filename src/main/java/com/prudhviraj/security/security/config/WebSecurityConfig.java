@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,6 +27,7 @@ import static com.prudhviraj.security.security.entities.enums.Role.CREATOR;
 @Configuration
 // Enables Spring Security and allows configuration of security features for the application
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final OauthSuccessHandler oauthSuccessHandler;
@@ -60,9 +62,6 @@ public class WebSecurityConfig {
                         // Restrict POST requests based on specific POST_CREATE authority
                         .requestMatchers(HttpMethod.POST, "/posts/**")
                             .hasAnyAuthority(POST_CREATE.name())
-                        // Restrict GET requests based on specific POST_VIEW authority
-                        .requestMatchers(HttpMethod.GET, "/posts/**")
-                            .hasAnyAuthority(POST_VIEW.name())
                         // Restrict PUT requests based on specific POST_UPDATE authority
                         .requestMatchers(HttpMethod.PUT, "/posts/**")
                             .hasAnyAuthority(POST_UPDATE.name())

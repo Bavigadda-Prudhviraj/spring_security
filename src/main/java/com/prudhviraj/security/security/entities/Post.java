@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 
 @Entity
@@ -21,4 +22,7 @@ public class Post extends Auditable {
     private String title;
     @Column(length = 5000)
     private String description;
+    @ManyToOne
+    @NotAudited // or @Audited(targetAuditMode = NOT_AUDITED)
+    private User author;
 }
